@@ -1,0 +1,7 @@
+variable: "This is Testing"
+
+file:
+  path: "C:\\Users\\Kyei\\Documents\\Toptal\\Customers-QA\\Customers-QA.csv"
+  
+http:
+  port: "8081"

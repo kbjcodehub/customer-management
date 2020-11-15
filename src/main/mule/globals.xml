@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:file="http://www.mulesoft.org/schema/mule/file"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd 
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	<file:config name="File_Config" doc:name="File Config"
+		doc:id="1dd0fc8c-63c2-4492-87bf-12fd834fd816" />
+
+	<configuration-properties
+		doc:name="Configuration properties"
+		doc:id="4aba7344-9218-4279-bc1b-faaacad26242" file="${env}.yaml" />
+	<global-property doc:name="Global Property"
+		doc:id="03951bd3-ea30-4b2e-9c2d-c10529f7d20c" name="env" value="qa" />
+	<configuration doc:name="Configuration"
+		doc:id="58a9e510-1d78-487c-9075-65819c1e3ff3"
+		defaultErrorHandler-ref="globalsError_Handler" />
+	<error-handler name="globalsError_Handler"
+		doc:id="3d724dc2-4bc0-488a-925b-cbc908e92452">
+		<on-error-propagate enableNotifications="true"
+			logException="true" doc:name="On Error Propagate"
+			doc:id="dd9674ff-7436-492f-980b-c18c616b89e0" type="ANY">
+			<ee:transform doc:name="Transform Message"
+				doc:id="fce08cfa-4777-4b5e-be0d-1b51025d0219">
+				<ee:message>
+					<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: error.description}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</on-error-propagate>
+	</error-handler>
+</mule>

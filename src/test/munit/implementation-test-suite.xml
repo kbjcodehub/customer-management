@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="implementation-test-suite.xml" />
+	<munit:test name="implementation-test-suite-add-customer-flowTest" doc:id="427c1f23-d6f0-4de1-8a9e-2b8433707dfa" description="Test">
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="a6c57871-deee-43a2-9a7b-f6ed29cb879d" >
+				<munit:payload value="{
+  &quot;firstName&quot;: &quot;Jason&quot;,
+  &quot;middleName&quot;: &quot;Omi&quot;,
+  &quot;lastName&quot;: &quot;Eno&quot;,
+  &quot;birthDate&quot;: &quot;1988-09-29&quot;,
+  &quot;height&quot;: &quot;6'6&quot;,
+  &quot;weight&quot;: &quot;78Kg&quot;,
+  &quot;billingStreet&quot;: &quot;23 Addison Hill&quot;,
+  &quot;billingCity&quot;: &quot;Akron&quot;,
+  &quot;billingState&quot;: &quot;OHIO&quot;,
+  &quot;billingPostalCode&quot;: &quot;201992&quot;,
+  &quot;billingCountry&quot;: &quot;USA&quot;
+} " mediaType="application/json" />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to post:\customers:application\json:customer-management-api-config" doc:id="42ab4829-2d3e-4c8a-8ebe-26e918d85bdd" name="add-customer-flow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="17fc313a-9810-4326-a8ed-446f9cc80935" expression="#[payload]" is="#[MunitTools::notNullValue()]"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="implementation-test-suite-get-customers-flowTest" doc:id="e7b3892b-028c-4026-af98-641f2620b977" description="Test">
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when" doc:id="32df8f48-b42d-4a44-8fa7-f481e50cc3d2" processor="file:read">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Read" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="906d6f71-550e-4325-84aa-d64664833736" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="File_Config" attributeName="config-ref" />
+					<munit-tools:with-attribute whereValue="${file.path}" attributeName="path" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[MunitTools::getResourceAsString('types/Customers-Mock1-QA.csv')]" mediaType="application/csv" />
+				</munit-tools:then-return>
+			
+</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="a80e9505-a262-4d32-a440-2047b14deac3" />
+			<flow-ref doc:name="Flow-ref to get:\customers:customer-management-api-config" doc:id="183acd45-a529-486d-88ad-5424c59fb060" name="get-customers-flow"/>
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-that doc:name="Assert that" doc:id="aed1e1da-6c4a-4d65-ad6f-f20649a33d27" expression="#[payload]" is="#[MunitTools::notNullValue()]"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="implementation-test-suite-delete-customer-flowTest" doc:id="8c05a0de-e5ed-4898-885d-a774c13a4b4c" description="Test">
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when" doc:id="75429e77-4f6c-44cc-9410-2ac24237c43f" processor="file:read">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Read CSV" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="f6bdb1bf-9b4e-40d3-b47b-d0db580faa67" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="File_Config" attributeName="config-ref" />
+					<munit-tools:with-attribute whereValue="${file.path}" attributeName="path" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[MunitTools::getResourceAsString('types/Customers-Mock-QA.csv')]" mediaType="application/csv" />
+				</munit-tools:then-return>
+			
+</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="baf4924d-caad-445b-80fe-602653aa8d21" >
+				<munit:attributes value='#[{queryParams:{clientKey:"CM20201031191035235035c9f37"}}]' />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to delete:\customers:customer-management-api-config" doc:id="796ce1f7-77a5-4e52-acd2-c9a022f10f26" name="get-customers-flow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="83d7cdfc-e097-4a02-82cc-6c0e6e8d15ef" is="#[MunitTools::notNullValue()]" expression="#[payload]"/>
+		</munit:validation>
+	</munit:test>
+
+
+</mule>

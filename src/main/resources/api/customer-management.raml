@@ -1,0 +1,78 @@
+#%RAML 1.0
+title: customer-management
+
+version: v1.0
+description: API for Customer Management
+
+protocols: [ HTTP, HTTPS ]
+mediaType: application/json
+
+types:
+  AddCustomerRequest:
+    type: !include data-types/createCustomerRequest.raml
+  AddCustomerResponse:
+    type: !include data-types/createCustomerResponse.raml
+  GetCustomersResponse:
+    type: !include data-types/getCustomersResponse.raml
+  DeleteCustomerResponse:
+    type: !include data-types/deleteResponse.raml
+
+uses:
+  Types: generic/errors.raml
+
+/customers:
+  description: This is to make payment for the particular biller.
+  post:
+    body:
+        type: AddCustomerRequest
+    responses:       
+      200:
+        body:
+          type: AddCustomerResponse
+      400:
+        description: Show failed response
+        body: 
+          application/json:
+            type: Types.error
+      404:
+        description: Entity <<resourcePathName|!singularize>> was not found.
+        body: 
+          application/json:
+            type: Types.error
+  get:
+    responses:       
+      200:
+        body:
+          type: GetCustomersResponse
+      400:
+        description: Show failed response
+        body: 
+          application/json:
+            type: Types.error
+      404:
+        description: Entity <<resourcePathName|!singularize>>           was not found.
+        body: 
+          application/json:
+            type: Types.error
+  delete:
+    queryParameters:
+      clientKey:
+        type: string
+    responses:       
+      200:
+        body:
+          type: DeleteCustomerResponse
+      400:
+        description: Show failed response
+        body: 
+          application/json:
+            type: Types.error
+            
+      404:
+        description: Entity <<resourcePathName|!singularize>>           was not found.
+        body: 
+          application/json:
+            type: Types.error
+            
+
+   
